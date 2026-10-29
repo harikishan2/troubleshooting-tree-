@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Interactive DSA demo of binary tree traversals for technical troubleshooting">
+<title>TreeWise | DSA Troubleshooting</title>
+<style>
+:root{--bg:#f3f6fc;--card:#fff;--ink:#172b4d;--muted:#63758a;--line:#d9e2ef;--blue:#3157d5;--teal:#078b83;--gold:#f5bd4e;--green:#16834a;--shadow:0 12px 30px #1b315315}
+body.dark{--bg:#101827;--card:#182438;--ink:#edf3ff;--muted:#adbbd0;--line:#2d3c54;--blue:#8aa2ff;--teal:#4bc9bf;--gold:#ffd477;--green:#58d18b;--shadow:0 12px 30px #0003}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Arial,Helvetica,sans-serif;transition:.2s}
+header{padding:28px 18px;color:#fff;background:radial-gradient(circle at 85% 5%,#7894ff,transparent 27%),linear-gradient(120deg,#142b59,#3157d5 65%,#078b83)}
+.wrap{max-width:1150px;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.brand{font-weight:bold;letter-spacing:.15em;font-size:.82rem}
+h1{font-size:clamp(1.8rem,4vw,3rem);line-height:1.12;margin:24px 0 10px}header p{max-width:780px;color:#e7edff;margin:0}
+.tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:18px}.tags span{border:1px solid #ffffff55;background:#ffffff17;border-radius:99px;padding:5px 10px;font-size:.8rem}
+main{max-width:1150px;margin:22px auto;padding:0 16px 35px}.heading{margin:26px 0 12px}.heading h2{margin:0;font-size:1.35rem}.heading p,.muted{color:var(--muted);font-size:.92rem;margin:4px 0}
+.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px;box-shadow:var(--shadow);min-width:0}
+h3{margin:0 0 8px;font-size:1.08rem}button{font:inherit;cursor:pointer;border:1px solid var(--line);border-radius:9px;padding:9px 12px;background:var(--card);color:var(--ink)}button:hover{filter:brightness(.96)}button.primary{background:var(--blue);color:white;border-color:transparent;font-weight:bold}button.teal{background:var(--teal);color:white;border-color:transparent;font-weight:bold}
+.controls{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.tree-scroll{overflow-x:auto}svg{width:100%;min-width:460px;height:auto;display:block}.edge{stroke:var(--muted);stroke-width:2;opacity:.65}.node circle{stroke:var(--card);stroke-width:3}.node text{font-size:15px;font-weight:bold;text-anchor:middle;dominant-baseline:middle;fill:white}.root circle{fill:var(--blue)}.internal circle{fill:var(--teal)}.leaf circle{fill:var(--gold)}.leaf text{fill:#35280a}.node.active circle{stroke:#ed5365;stroke-width:5}.node.visited circle{fill:var(--green)}.label{font-size:11px;text-anchor:middle;fill:var(--ink)}
+.sequence,.answer{padding:12px;border:1px solid var(--line);background:var(--bg);border-radius:11px;min-height:50px;overflow-wrap:anywhere}.sequence{font-weight:bold}.pill{display:inline-block;background:var(--bg);border:1px solid var(--line);padding:4px 8px;border-radius:8px;margin:3px;font-size:.82rem}.pill.current{background:var(--blue);color:white}
+.progress{height:7px;background:var(--line);border-radius:9px;overflow:hidden;margin:12px 0}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));width:20%;transition:.3s}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:13px}.stat{padding:12px;background:var(--bg);border:1px solid var(--line);border-radius:10px}.stat strong{display:block;color:var(--blue);font-size:1.15rem}.stat small{color:var(--muted)}
+pre{white-space:pre;overflow:auto;background:#0d1b2b;color:#dff3ff;border-radius:12px;padding:15px;font-size:.81rem;line-height:1.5}table{border-collapse:collapse;width:100%;font-size:.9rem}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:var(--bg);color:var(--blue)}.table-scroll{overflow-x:auto}details{border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin:8px 0}summary{cursor:pointer;font-weight:bold}.callout{border-left:4px solid var(--teal);padding:12px;background:var(--bg);border-radius:0 10px 10px 0}.small{font-size:.82rem;color:var(--muted)}footer{text-align:center;color:var(--muted);padding:24px;font-size:.85rem}
+@media(max-width:800px){.grid{grid-template-columns:1fr}}@media(max-width:480px){.stats{grid-template-columns:1fr}main{padding:0 10px 28px}.card{padding:14px}}
+</style></head><body>
+<header><div class="wrap"><div class="top"><div class="brand">TREEWISE / DSA LAB</div><div><button id="theme">🌙 Toggle theme</button> <button onclick="window.print()">Print page</button></div></div>
+<h1>Technical Troubleshooting<br>Decision Support System</h1><p>An interactive DSA working model: explore a binary decision tree, animate four traversal algorithms, and test a sample troubleshooting path.</p>
+<div class="tags"><span>Binary Tree</span><span>Python 3</span><span>Interactive Demo</span><span>Big-O Analysis</span></div></div></header>
+<main>
+<div class="heading"><h2>01 / Interactive binary tree</h2><p>Select a traversal, then step through the order to highlight each node.</p></div>
+<div class="grid">
+<section class="card"><h3>Technical troubleshooting tree</h3><p class="muted">A is the root, B and C are internal nodes, and D–G are leaf/action nodes.</p>
+<div class="tree-scroll"><svg viewBox="0 0 600 300" role="img" aria-label="Seven-node binary tree">
+<g><line class="edge" x1="300" y1="48" x2="170" y2="123"/><line class="edge" x1="300" y1="48" x2="430" y2="123"/><line class="edge" x1="170" y1="123" x2="95" y2="218"/><line class="edge" x1="170" y1="123" x2="245" y2="218"/><line class="edge" x1="430" y1="123" x2="355" y2="218"/><line class="edge" x1="430" y1="123" x2="505" y2="218"/></g>
+<g class="node root" data-node="A"><circle cx="300" cy="43" r="23"/><text x="300" y="43">A</text></g><g class="node internal" data-node="B"><circle cx="170" cy="123" r="23"/><text x="170" y="123">B</text></g><g class="node internal" data-node="C"><circle cx="430" cy="123" r="23"/><text x="430" y="123">C</text></g>
+<g class="node leaf" data-node="D"><circle cx="95" cy="218" r="23"/><text x="95" y="218">D</text></g><g class="node leaf" data-node="E"><circle cx="245" cy="218" r="23"/><text x="245" y="218">E</text></g><g class="node leaf" data-node="F"><circle cx="355" cy="218" r="23"/><text x="355" y="218">F</text></g><g class="node leaf" data-node="G"><circle cx="505" cy="218" r="23"/><text x="505" y="218">G</text></g>
+<text class="label" x="300" y="78">Power on?</text><text class="label" x="170" y="158">Power cable</text><text class="label" x="430" y="158">Internet</text><text class="label" x="95" y="255">Connect cable</text><text class="label" x="245" y="255">Test outlet</text><text class="label" x="355" y="255">Restart router</text><text class="label" x="505" y="255">Check service</text></svg></div>
+<p class="small">Legend: blue = root · teal = internal node · gold = leaf/action · green = already visited · red outline = current node</p>
+<div class="controls"><button class="primary" data-method="preorder">Preorder</button><button data-method="inorder">Inorder</button><button data-method="postorder">Postorder</button><button data-method="levelorder">Level-order</button></div>
+<div class="sequence" id="sequence" aria-live="polite">Choose a traversal to show its sequence.</div>
+<div class="controls"><button class="teal" id="next">Next step ▶</button><button id="play">Play traversal</button><button id="reset">Reset</button></div>
+<div id="pills"></div><p id="explanation" class="muted">Use Next step or Play traversal to see the visiting order.</p></section>
+<section class="card"><h3>Live troubleshooting simulator</h3><p class="muted">Answer the questions to get a suggested action. This is an educational example.</p>
+<div class="progress"><span id="bar"></span></div><p class="small" id="stepLabel">Step 1 of 2</p><div id="question" style="font-weight:bold;font-size:1.08rem">Does the device power on?</div>
+<div class="controls" id="answers"><button class="primary" data-answer="yes">Yes</button><button data-answer="no">No</button></div>
+<div class="answer" id="diagnosis">Select Yes or No to continue.</div><div class="controls"><button id="restart">↻ Restart diagnosis</button></div>
+<div class="stats"><div class="stat"><strong>7</strong><small>Tree nodes</small></div><div class="stat"><strong>4</strong><small>Traversals</small></div><div class="stat"><strong>O(n)</strong><small>Time</small></div></div>
+<h3 style="margin-top:18px">Node guide</h3><p class="muted">A: Does the device power on?<br>B: Check the power cable.<br>C: Check the internet connection.<br>D: Connect cable.<br>E: Test outlet.<br>F: Restart router.<br>G: Check service status.</p></section></div>
+<div class="heading"><h2>02 / Algorithm comparison</h2><p>Visiting rules, uses, and complexity.</p></div>
+<section class="card table-scroll"><table><thead><tr><th>Traversal</th><th>Visiting rule</th><th>Typical use</th><th>Time</th><th>Auxiliary space</th></tr></thead><tbody>
+<tr><td><b>Preorder</b></td><td>Root → Left → Right</td><td>Parent-first processing; tree representation</td><td>O(n)</td><td>O(h)</td></tr><tr><td><b>Inorder</b></td><td>Left → Root → Right</td><td>Sorted output in a binary search tree</td><td>O(n)</td><td>O(h)</td></tr><tr><td><b>Postorder</b></td><td>Left → Right → Root</td><td>Child-first processing; deleting trees</td><td>O(n)</td><td>O(h)</td></tr><tr><td><b>Level-order</b></td><td>Level by level</td><td>Breadth-first exploration using a queue</td><td>O(n)</td><td>O(w)</td></tr></tbody></table><p class="small">n = number of nodes; h = tree height; w = maximum number of nodes at one level. Worst-case auxiliary space can be O(n).</p></section>
+<div class="heading"><h2>03 / Python implementation</h2><p>Copy the code and run it with Python 3.</p></div>
+<section class="card"><div class="controls"><button id="copy" class="primary">Copy Python code</button></div>
+<pre id="code"><code>from collections import deque
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
+
+def preorder(node):
+    if node is None:
+        return
+    print(node.data, end=" ")
+    preorder(node.left)
+    preorder(node.right)
+
+def inorder(node):
+    if node is None:
+        return
+    inorder(node.left)
+    print(node.data, end=" ")
+    inorder(node.right)
+
+def postorder(node):
+    if node is None:
+        return
+    postorder(node.left)
+    postorder(node.right)
+    print(node.data, end=" ")
+
+def levelorder(root):
+    if root is None:
+        return
+    queue = deque([root])
+    while queue:
+        node = queue.popleft()
+        print(node.data, end=" ")
+        if node.left:
+            queue.append(node.left)
+        if node.right:
+            queue.append(node.right)
+
+root = Node("A")
+root.left = Node("B")
+root.right = Node("C")
+root.left.left = Node("D")
+root.left.right = Node("E")
+root.right.left = Node("F")
+root.right.right = Node("G")
+
+print("Preorder: ", end=""); preorder(root); print()
+print("Inorder: ", end=""); inorder(root); print()
+print("Postorder: ", end=""); postorder(root); print()
+print("Level-order: ", end=""); levelorder(root); print()</code></pre>
+<h3>Expected output</h3><pre><code>Preorder: A B D E C F G
+Inorder: D B E A F C G
+Postorder: D E B F G C A
+Level-order: A B C D E F G</code></pre></section>
+<div class="heading"><h2>04 / Viva preparation</h2><p>Quick answers to common demonstration questions.</p></div>
+<section class="card"><details><summary>What is a binary tree?</summary><p class="muted">A non-linear data structure where each node has at most two children: left and right.</p></details>
+<details><summary>Why do all traversals take O(n) time?</summary><p class="muted">Every traversal visits each of the n nodes exactly once.</p></details>
+<details><summary>Why does level-order use a queue?</summary><p class="muted">A queue follows First In, First Out (FIFO), allowing nodes to be processed level by level.</p></details>
+<details><summary>What is the limitation of this model?</summary><p class="muted">It uses a small fixed tree. A real support system needs more cases and verified diagnostic rules.</p></details>
+<div class="callout"><b>Presentation plan:</b> Explain the tree → click each traversal → use Play traversal → test the Yes/No simulator → show Python output and complexity.</div></section>
+<footer>TreeWise · DSA Working Model · HTML + CSS + JavaScript + Python</footer></main>
+<script>
+const orders={preorder:["A","B","D","E","C","F","G"],inorder:["D","B","E","A","F","C","G"],postorder:["D","E","B","F","G","C","A"],levelorder:["A","B","C","D","E","F","G"]};
+const desc={preorder:"Root first, then left subtree, then right subtree.",inorder:"Left subtree, root, then right subtree. Sorted output applies to a binary search tree.",postorder:"Left subtree, right subtree, then root last.",levelorder:"Breadth-first: visit each level from left to right using a FIFO queue."};
+let method="preorder",idx=-1,timer=null;
+const seq=document.getElementById("sequence"),pills=document.getElementById("pills"),exp=document.getElementById("explanation");
+function stop(){if(timer){clearInterval(timer);timer=null}document.getElementById("play").textContent="Play traversal"}
+function draw(){document.querySelectorAll(".node").forEach(n=>n.classList.remove("active","visited"));const a=orders[method];a.forEach((id,i)=>{if(i<idx)document.querySelector('[data-node="'+id+'"]').classList.add("visited")});if(idx>=0&&idx<a.length)document.querySelector('[data-node="'+a[idx]+'"]').classList.add("active");pills.innerHTML="";a.forEach((id,i)=>{let s=document.createElement("span");s.className="pill"+(i===idx?" current":"");s.textContent=(i+1)+". "+id;pills.appendChild(s)});if(idx<0){seq.textContent="Choose a traversal to show its sequence.";exp.textContent="Use Next step or Play traversal to see the visiting order."}else{seq.textContent=method[0].toUpperCase()+method.slice(1)+": "+a.join(" → ");exp.textContent="Step "+(idx+1)+" of "+a.length+": visit node "+a[idx]+". "+desc[method]}}
+document.querySelectorAll("[data-method]").forEach(b=>b.addEventListener("click",()=>{stop();method=b.dataset.method;idx=-1;draw()}));
+document.getElementById("next").addEventListener("click",()=>{stop();idx=idx>=orders[method].length-1?-1:idx+1;draw()});
+document.getElementById("reset").addEventListener("click",()=>{stop();idx=-1;draw()});
+document.getElementById("play").addEventListener("click",()=>{if(timer){stop();return}if(idx>=orders[method].length-1)idx=-1;document.getElementById("play").textContent="Pause";timer=setInterval(()=>{idx++;draw();if(idx>=orders[method].length-1)stop()},850)});
+document.getElementById("theme").addEventListener("click",()=>document.body.classList.toggle("dark"));
+document.getElementById("copy").addEventListener("click",async()=>{try{await navigator.clipboard.writeText(document.querySelector("#code code").innerText);document.getElementById("copy").textContent="Copied!"}catch(e){document.getElementById("copy").textContent="Select the code manually"}setTimeout(()=>document.getElementById("copy").textContent="Copy Python code",1500)});
+let stage=0;const q=document.getElementById("question"),ans=document.getElementById("answers"),diag=document.getElementById("diagnosis"),bar=document.getElementById("bar"),lab=document.getElementById("stepLabel");
+function render(){bar.style.width=stage===0?"25%":stage===1?"65%":"100%";if(stage===0){lab.textContent="Step 1 of 2";q.textContent="Does the device power on?";ans.innerHTML='<button class="primary" data-answer="yes">Yes</button><button data-answer="no">No</button>';diag.textContent="Select Yes or No to continue."}else if(stage===1){lab.textContent="Step 2 of 2";q.textContent="Is the internet connection working?";ans.innerHTML='<button class="primary" data-answer="yes">Yes</button><button data-answer="no">No</button>';diag.textContent="Device powers on. Now check the network."}else{lab.textContent="Diagnosis complete";q.textContent="Suggested next action";ans.innerHTML='<span class="pill">Demo complete</span>'}ans.querySelectorAll("[data-answer]").forEach(b=>b.addEventListener("click",()=>respond(b.dataset.answer)))}
+function respond(v){if(stage===0&&v==="no"){stage=2;render();diag.textContent="Power issue: connect the power cable (D). If needed, test the power outlet (E)."}else if(stage===0){stage=1;render()}else if(stage===1&&v==="no"){stage=2;render();diag.textContent="Network issue: restart the router (F). If it continues, check internet service status (G)."}else{stage=2;render();diag.textContent="Device and internet appear to work. If an app still fails, restart it and check its error message."}}
+document.getElementById("restart").addEventListener("click",()=>{stage=0;render()});render();draw();
+</script></body></html>
